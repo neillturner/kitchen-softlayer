@@ -43,8 +43,6 @@ module Kitchen
       default_config :cpu,nil                  #    :aliases => ['startCpus', 'processorCoreAmount']
       default_config :ram,nil                  #    :aliases => ['maxMemory', 'memory']
       default_config :disk,nil                 #    :aliases => ['blockDevices','hardDrives']
-      default_config :private_ip_address,nil   #    :aliases => 'primaryBackendIpAddress'
-      default_config :public_ip_address,nil    #    :aliases => 'primaryIpAddress'
       default_config :flavor_id,nil
       default_config :bare_metal,false           #    :type => :boolean
       default_config :os_code,nil
@@ -68,7 +66,8 @@ module Kitchen
       default_config :user_data,nil               # :aliases => 'userData'
       default_config :uid,nil                     # :aliases => 'globalIdentifier'
       default_config :tags,[]                     # tags are an array like ["sparkle", "motion"]
-
+      default_config :vlan,nil                    # :primaryNetworkComponent,
+      default_config :private_vlan,nil            # :primaryBackendNetworkComponent,
 
       def create(state)
         unless config[:server_name]
@@ -161,8 +160,6 @@ module Kitchen
           :cpu,
           :ram,
           :disk,
-          :private_ip_address,
-          :public_ip_address,
           :flavor_id,
           :bare_metal,
           :os_code,
@@ -174,7 +171,9 @@ module Kitchen
           :global_identifier,
           :tags,
           :user_data,
-          :uid
+          :uid,
+          :vlan,
+          :private_vlan
         ].each do |c|
           server_def[c] = optional_config(c) if config[c]
         end
@@ -195,6 +194,8 @@ module Kitchen
 
       def optional_config(c)
         case c
+ #       when :private_vlan
+ #         config[c].to_i
         when :user_data
           File.open(config[c]) { |f| f.read } if File.exist?(config[c])
         else

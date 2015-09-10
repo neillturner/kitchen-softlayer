@@ -104,8 +104,6 @@ fqdn | nil | fully qualified domain name
 cpu | nil | no of cpus
 ram | nil | memory size
 disk | nil | disk size
-private_ip_address | nil | private ip address of server
-public_ip_address | nil | public ip address of server
 flavor_id | nil | type of server i.e. m1.tiny
 bare_metal | false | server to be created on bare metal (takes longer)
 os_code | nil | softlayer's operating System Reference Code
@@ -122,6 +120,8 @@ tags | [] | tags for the server
 private_network_only | true | if only a private network
 user_data | nil | user data for server
 uid | nil | softlayer global id
+vlan | nil | numeric id of private_vlan for server
+private_vlan | nil | numeric id of private_vlan for server
 
 ## Contributing
 
