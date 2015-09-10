@@ -20,7 +20,7 @@ require 'fog/softlayer'
 module Kitchen
   module Driver
     # Softlayer driver for Kitchen.
-    class Softlayer < Kitchen::Driver::SSHBase
+    class Softlayer < Kitchen::Driver::SSHBase # rubocop:disable Metrics/ClassLength/ParameterLists
       default_config :server_name, nil
       default_config :key_name, nil
       required_config :key_name
@@ -48,7 +48,7 @@ module Kitchen
       default_config :image_id, nil
       default_config :ephemeral_storage, nil
       # keypair found from keyname
-      #default_config :key_pairs, nil
+      # default_config :key_pairs, nil
       default_config :network_components, nil
       default_config :softlayer_username, ENV['softlayer_username']
       default_config :softlayer_api_key, ENV['softlayer_api_key']
@@ -124,11 +124,11 @@ module Kitchen
 
       def compute
         @compute_connection ||= Fog::Compute.new(
-            :provider => :softlayer,
-            :softlayer_username => config[:softlayer_username],
-            :softlayer_api_key => config[:softlayer_api_key],
-            :softlayer_default_datacenter => config[:softlayer_datacenter],
-            :softlayer_default_domain => config[:softlayer_domain],
+          :provider => :softlayer,
+          :softlayer_username => config[:softlayer_username],
+          :softlayer_api_key => config[:softlayer_api_key],
+          :softlayer_default_datacenter => config[:softlayer_datacenter],
+          :softlayer_default_domain => config[:softlayer_domain]
         )
       end
 
@@ -136,7 +136,7 @@ module Kitchen
         @network_connection ||= Fog::Network.new(
           :provider => :softlayer,
           :softlayer_username => config[:softlayer_username],
-          :softlayer_api_key => config[:softlayer_api_key],
+          :softlayer_api_key => config[:softlayer_api_key]
         )
       end
 
