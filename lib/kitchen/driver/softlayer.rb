@@ -20,7 +20,8 @@ require 'fog/softlayer'
 module Kitchen
   module Driver
     # Softlayer driver for Kitchen.
-    class Softlayer < Kitchen::Driver::SSHBase # rubocop:disable Metrics/ClassLength, Metrics/LineLength, Metrics/ParameterLists
+    # rubocop:disable Metrics/LineLength
+    class Softlayer < Kitchen::Driver::SSHBase
       default_config :server_name, nil
       default_config :key_name, nil
       required_config :key_name
@@ -122,7 +123,7 @@ module Kitchen
         fail "#{config[:ssh_timeout]} seconds went by and we couldn't connect, somethings broken"
       end
 
-      def compute
+      def compute # rubocop:disable Metrics/ParameterLists
         @compute_connection ||= Fog::Compute.new(
           :provider => :softlayer,
           :softlayer_username => config[:softlayer_username],
@@ -132,7 +133,7 @@ module Kitchen
         )
       end
 
-      def network
+      def network # rubocop:disable Metrics/ParameterLists
         @network_connection ||= Fog::Network.new(
           :provider => :softlayer,
           :softlayer_username => config[:softlayer_username],
@@ -254,7 +255,8 @@ module Kitchen
         info "Using Softlayer keypair <#{config[:key_name]}>"
         info "Using private SSH key <#{config[:ssh_key]}>"
         state[:ssh_key] = config[:ssh_key]
-        do_ssh_setup(state, config, server) unless config[:key_name]  # we don't call this as key_name must be set.
+        # we don't call this as key_name must be set.
+        do_ssh_setup(state, config, server) unless config[:key_name]
       end
 
       def tcp_check(state)
