@@ -64,12 +64,12 @@ or an image_id.
 By default this parameter is set to false so no public network with be created.
 For test-kitchen to access the server via ssh it needs to be on the softlayer private VPN. See:
 
-      [Using SSL VPN](http://knowledgelayer.softlayer.com/procedure/using-ssl-vpn)
+[Using SSL VPN](http://knowledgelayer.softlayer.com/procedure/using-ssl-vpn)
 
 ### ssh_key
  Currently the driver only supports using SSH keys to access servers. This requires that you upload an SSH Key in Softlayer see:
 
-      [SSH Keys](http://knowledgelayer.softlayer.com/procedure/ssh-keys-0)
+[SSH Keys](http://knowledgelayer.softlayer.com/procedure/ssh-keys-0)
 
  in the kitchen.yml file specify the label of the ssh key as the parameter key_name
  and specify the private key for the uploaded public key as parameter ssh_key.
