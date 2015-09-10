@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/test-kitchen/kitchen-softlayer'
   spec.license       = 'Apache'
   candidates = Dir.glob('{lib}/**/*') + ['README.md', 'LICENSE.txt']
-  candidates = candidates + ['CHANGELOG.md', 'kitchen-softlayer.gemspec']
+  candidates += ['CHANGELOG.md', 'kitchen-softlayer.gemspec']
   spec.files = candidates.sort
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 1.9.3'

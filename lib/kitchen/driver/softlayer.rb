@@ -193,7 +193,7 @@ module Kitchen
       def optional_config(c)
         case c
         when :user_data
-          File.open(config[c]&:read) if File.exist?(config[c])
+          File.open(config[c]).read if File.exist?(config[c])
         else
           config[c]
         end
