@@ -20,7 +20,7 @@ require 'fog/softlayer'
 module Kitchen
   module Driver
     # Softlayer driver for Kitchen.
-    class Softlayer < Kitchen::Driver::SSHBase  rubocop:disable Metrics/ClassLength, Metrics/LineLength
+    class Softlayer < Kitchen::Driver::SSHBase
       default_config :server_name, nil
       default_config :key_name, nil
       required_config :key_name
