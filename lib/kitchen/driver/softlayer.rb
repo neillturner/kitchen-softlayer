@@ -70,9 +70,7 @@ module Kitchen
       default_config :private_vlan, nil
 
       def create(state)
-        unless config[:server_name]
-          config[:server_name] = default_name
-        end
+        config[:server_name] = default_name unless config[:server_name]
         config[:disable_ssl_validation] && disable_ssl_validation
         server = create_server
         state[:server_id] = server.id
@@ -144,13 +142,13 @@ module Kitchen
       def create_server
         server_def = init_configuration
 
-    #   TODO: figure out network options
-    #    if config[:network_ref]
-    #      networks = [].concat([config[:network_ref]])
-    #      server_def[:nics] = networks.flatten.map do |net|
-    #        { 'net_id' => find_network(net).id }
-    #      end
-        # end
+        #   TODO: figure out network options
+        #    if config[:network_ref]
+        #      networks = [].concat([config[:network_ref]])
+        #      server_def[:nics] = networks.flatten.map do |net|
+        #        { 'net_id' => find_network(net).id }
+        #      end
+        #    end
         [
           :username,
           :password,
@@ -282,42 +280,42 @@ module Kitchen
         server.add_tags(config[:tags])
       end
 
-  #   TODO: add these checks
-  #    def find_image(image_ref)
-  #      image = find_matching(compute.images, image_ref)
-  #      fail(ActionFailed, 'Image not found') unless image
-  #      debug "Selected image: #{image.id} #{image.name}"
-  #      image
-  #    end
+      #   TODO: add these checks
+      #    def find_image(image_ref)
+      #      image = find_matching(compute.images, image_ref)
+      #      fail(ActionFailed, 'Image not found') unless image
+      #      debug "Selected image: #{image.id} #{image.name}"
+      #      image
+      #    end
 
-  #    def find_flavor(flavor_ref)
-  #      flavor = find_matching(compute.flavors, flavor_ref)
-  #      fail(ActionFailed, 'Flavor not found') unless flavor
-  #      debug "Selected flavor: #{flavor.id} #{flavor.name}"
-  #      flavor
-  #    end
+      #    def find_flavor(flavor_ref)
+      #      flavor = find_matching(compute.flavors, flavor_ref)
+      #      fail(ActionFailed, 'Flavor not found') unless flavor
+      #      debug "Selected flavor: #{flavor.id} #{flavor.name}"
+      #      flavor
+      #    end
 
-  #    def find_network(network_ref)
-  #      net = find_matching(network.networks.all, network_ref)
-  #      fail(ActionFailed, 'Network not found') unless net
-  #      debug "Selected net: #{net.id} #{net.name}"
-  #      net
-  #    end
+      #    def find_network(network_ref)
+      #      net = find_matching(network.networks.all, network_ref)
+      #      fail(ActionFailed, 'Network not found') unless net
+      #      debug "Selected net: #{net.id} #{net.name}"
+      #      net
+      #    end
 
-  #    def find_matching(collection, name)
-  #      name = name.to_s
-  #      if name.start_with?('/') && name.end_with?('/')
-  #        regex = Regexp.new(name[1...-1])
-  #      # check for regex name match
-  #        collection.each { |single| return single if regex =~ single.name }
-  #      else
-  #      # check for exact id match
-  #        collection.each { |single| return single if single.id == name }
-  #      # check for exact name match
-  #        collection.each { |single| return single if single.name == name }
-  #      end
-  #      nil
-     # end
+      #    def find_matching(collection, name)
+      #      name = name.to_s
+      #      if name.start_with?('/') && name.end_with?('/')
+      #        regex = Regexp.new(name[1...-1])
+      #      # check for regex name match
+      #        collection.each { |single| return single if regex =~ single.name }
+      #      else
+      #      # check for exact id match
+      #        collection.each { |single| return single if single.id == name }
+      #      # check for exact name match
+      #        collection.each { |single| return single if single.name == name }
+      #      end
+      #      nil
+      #    end
     end
   end
 end
