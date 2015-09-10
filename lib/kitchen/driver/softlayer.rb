@@ -20,8 +20,7 @@ require 'fog/softlayer'
 module Kitchen
   module Driver
     # Softlayer driver for Kitchen.
-    class Softlayer < Kitchen::Driver::SSHBase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
-
+    class Softlayer < Kitchen::Driver::SSHBase  rubocop:disable Metrics/ClassLength, Metrics/LineLength
       default_config :server_name, nil
       default_config :key_name, nil
       required_config :key_name
@@ -37,37 +36,37 @@ module Kitchen
       default_config :username, 'root'
       default_config :password, nil
       default_config :port, '22'
-      default_config :hostname,nil
-      default_config :domain,ENV['softlayer_default_domain']
-      default_config :fqdn,nil                 #    :aliases => 'fullyQualifiedDomainName'
-      default_config :cpu,nil                  #    :aliases => ['startCpus', 'processorCoreAmount']
-      default_config :ram,nil                  #    :aliases => ['maxMemory', 'memory']
-      default_config :disk,nil                 #    :aliases => ['blockDevices','hardDrives']
-      default_config :flavor_id,nil
-      default_config :bare_metal,false           #    :type => :boolean
-      default_config :os_code,nil
-      default_config :image_id,nil
-      default_config :ephemeral_storage,nil    #    :aliases => 'localDiskFlag'
+      default_config :hostname, nil
+      default_config :domain, ENV['softlayer_default_domain']
+      default_config :fqdn, nil
+      default_config :cpu, nil
+      default_config :ram, nil
+      default_config :disk, nil
+      default_config :flavor_id, nil
+      default_config :bare_metal, false
+      default_config :os_code, nil
+      default_config :image_id, nil
+      default_config :ephemeral_storage, nil
       # keypair found from keyname
-      #default_config :key_pairs,nil            #    :aliases => 'sshKeys'
-      default_config :network_components,nil
-      default_config :softlayer_username,ENV['softlayer_username']
-      default_config :softlayer_api_key,ENV['softlayer_api_key']
-      default_config :softlayer_default_datacenter,ENV['softlayer_default_datacenter']
-      default_config :softlayer_default_domain,ENV['softlayer_default_domain']
-      default_config :ssh_timeout,300
-      default_config :account_id,nil              # :aliases => 'accountId', :type => :integer
-      default_config :datacenter,ENV['softlayer_default_datacenter']
-      default_config :single_tenant,false         # :aliases => 'dedicatedAccountHostOnlyFlag'
-      default_config :global_identifier,nil       # :aliases => 'globalIdentifier'
-      default_config :hourly_billing_flag,true    # :aliases => 'hourlyBillingFlag'
-      default_config :tags,nil                    # :aliases => 'tagReferences'
-      default_config :private_network_only,true   # :aliases => 'privateNetworkOnlyFlag'
-      default_config :user_data,nil               # :aliases => 'userData'
-      default_config :uid,nil                     # :aliases => 'globalIdentifier'
-      default_config :tags,[]                     # tags are an array like ["sparkle", "motion"]
-      default_config :vlan,nil                    # :primaryNetworkComponent,
-      default_config :private_vlan,nil            # :primaryBackendNetworkComponent,
+      #default_config :key_pairs, nil
+      default_config :network_components, nil
+      default_config :softlayer_username, ENV['softlayer_username']
+      default_config :softlayer_api_key, ENV['softlayer_api_key']
+      default_config :softlayer_default_datacenter, ENV['softlayer_default_datacenter']
+      default_config :softlayer_default_domain, ENV['softlayer_default_domain']
+      default_config :ssh_timeout, 300
+      default_config :account_id, nil
+      default_config :datacenter, ENV['softlayer_default_datacenter']
+      default_config :single_tenant, false
+      default_config :global_identifier, nil
+      default_config :hourly_billing_flag, true
+      default_config :tags, nil
+      default_config :private_network_only, true
+      default_config :user_data, nil
+      default_config :uid, nil
+      default_config :tags, []
+      default_config :vlan, nil
+      default_config :private_vlan, nil
 
       def create(state)
         unless config[:server_name]
@@ -194,8 +193,6 @@ module Kitchen
 
       def optional_config(c)
         case c
- #       when :private_vlan
- #         config[c].to_i
         when :user_data
           File.open(config[c]) { |f| f.read } if File.exist?(config[c])
         else
@@ -266,7 +263,7 @@ module Kitchen
         if config[:no_ssh_tcp_check]
           sleep(config[:no_ssh_tcp_check_sleep])
         else
-          debug( "wait_for_sshd hostname: #{state[:hostname]},username: #{config[:username]},port: #{config[:port]}")
+          debug("wait_for_sshd hostname: #{state[:hostname]},username: #{config[:username]},port: #{config[:port]}")
           wait_for_sshd(state[:hostname],
                         config[:username],
                         port: config[:port])
@@ -282,7 +279,6 @@ module Kitchen
       def tag_server(server)
         server.add_tags(config[:tags])
       end
-
 
   #   TODO: add these checks
   #    def find_image(image_ref)
@@ -306,20 +302,20 @@ module Kitchen
   #      net
   #    end
 
-     # def find_matching(collection, name)
-     #   name = name.to_s
-     #   if name.start_with?('/') && name.end_with?('/')
-     #     regex = Regexp.new(name[1...-1])
-     #     # check for regex name match
-     #     collection.each { |single| return single if regex =~ single.name }
-     #   else
-     #     # check for exact id match
-     #     collection.each { |single| return single if single.id == name }
-     #     # check for exact name match
-     #     collection.each { |single| return single if single.name == name }
-     #   end
-     #   nil
-     # end
+  #    def find_matching(collection, name)
+  #      name = name.to_s
+  #      if name.start_with?('/') && name.end_with?('/')
+  #        regex = Regexp.new(name[1...-1])
+  #      # check for regex name match
+  #        collection.each { |single| return single if regex =~ single.name }
+  #      else
+  #      # check for exact id match
+  #        collection.each { |single| return single if single.id == name }
+  #      # check for exact name match
+  #        collection.each { |single| return single if single.name == name }
+  #      end
+  #      nil
+  #    end
     end
   end
 end
