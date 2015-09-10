@@ -123,21 +123,21 @@ module Kitchen
         fail "#{config[:ssh_timeout]} seconds went by and we couldn't connect, somethings broken"
       end
 
-      def compute # rubocop:disable Metrics/ParameterLists
+      def compute
         @compute_connection ||= Fog::Compute.new(
-          :provider => :softlayer,
-          :softlayer_username => config[:softlayer_username],
-          :softlayer_api_key => config[:softlayer_api_key],
-          :softlayer_default_datacenter => config[:softlayer_datacenter],
-          :softlayer_default_domain => config[:softlayer_domain]
+          provider: :softlayer,
+          softlayer_username: config[:softlayer_username],
+          softlayer_api_key: config[:softlayer_api_key],
+          softlayer_default_datacenter: config[:softlayer_datacenter],
+          softlayer_default_domain: config[:softlayer_domain]
         )
       end
 
-      def network # rubocop:disable Metrics/ParameterLists
+      def network
         @network_connection ||= Fog::Network.new(
-          :provider => :softlayer,
-          :softlayer_username => config[:softlayer_username],
-          :softlayer_api_key => config[:softlayer_api_key]
+          provider: :softlayer,
+          softlayer_username: config[:softlayer_username],
+          softlayer_api_key: config[:softlayer_api_key]
         )
       end
 
@@ -150,7 +150,7 @@ module Kitchen
     #      server_def[:nics] = networks.flatten.map do |net|
     #        { 'net_id' => find_network(net).id }
     #      end
-    #    end
+        # end
         [
           :username,
           :password,
@@ -188,7 +188,7 @@ module Kitchen
           hostname: config[:hostname],
           datacenter: config[:datacenter],
           hourly_billing_flag: config[:hourly_billing_flag],
-          private_network_only: config[:private_network_only],
+          private_network_only: config[:private_network_only]
         }
       end
 
@@ -317,7 +317,7 @@ module Kitchen
   #        collection.each { |single| return single if single.name == name }
   #      end
   #      nil
-  #    end
+     # end
     end
   end
 end
