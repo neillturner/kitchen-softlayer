@@ -7,7 +7,6 @@
 A Test Kitchen Driver for Softlayer
 
 
-
 ## Installation
 
 Add this line to your application's Gemfile:
