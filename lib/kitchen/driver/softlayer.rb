@@ -73,7 +73,7 @@ module Kitchen
         config[:server_name] = default_name unless config[:server_name]
         config[:disable_ssl_validation] && disable_ssl_validation
         server = find_server(config[:hostname])
-        server = create_server if !server
+        server = create_server unless server
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
