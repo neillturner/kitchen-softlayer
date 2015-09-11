@@ -13,6 +13,8 @@ describe Kitchen::Driver::Softlayer do
   let(:logger) { Logger.new(logged_output) }
   let(:config) { Hash.new }
   let(:state) { Hash.new }
+  
+  let(:driver) { Kitchen::Driver::Softlayer.new(config) }
 
   describe '#disable_ssl_validation' do
     it 'turns off Excon SSL cert validation' do
