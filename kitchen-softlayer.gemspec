@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Neill Turner']
   spec.email         = ['neillwturner@gmail.com']
   spec.description   = 'A Test Kitchen Softlayer driver'
-  spec.summary       = spec.description
+  spec.summary       = 'Test Kitchen Softlayer driver'
   spec.homepage      = 'https://github.com/test-kitchen/kitchen-softlayer'
   spec.license       = 'Apache'
   candidates = Dir.glob('{lib}/**/*') + ['README.md', 'LICENSE.txt']

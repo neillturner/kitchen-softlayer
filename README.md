@@ -77,6 +77,10 @@ For test-kitchen to access the server via ssh it needs to be on the softlayer pr
 The `image_ref` and `flavor_ref` options can be specified as an exact id,
 an exact name, or as a regular expression matching the name of the image or flavor.
 
+### hostname
+
+the driver checks for a server with the hostname and will use that server instead of creating another one.
+
 ### disable_ssl_validation
 
 the driver uses the fog-softlayer ruby client to communicate with softlayer.

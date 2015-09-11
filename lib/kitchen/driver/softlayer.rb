@@ -72,7 +72,8 @@ module Kitchen
       def create(state)
         config[:server_name] = default_name unless config[:server_name]
         config[:disable_ssl_validation] && disable_ssl_validation
-        server = create_server
+        server = find_server(config[:hostname])
+        server = create_server if !server
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
@@ -139,9 +140,20 @@ module Kitchen
         )
       end
 
+      def find_server(hostname)
+        s = nil
+        servers = compute.servers.all
+        servers.each do |server|
+          if server.name == hostname
+            s = server
+            info "Server with hostname #{hostname} already created"
+          end
+        end
+        s
+      end
+
       def create_server
         server_def = init_configuration
-
         #   TODO: figure out network options
         #    if config[:network_ref]
         #      networks = [].concat([config[:network_ref]])
