@@ -8,7 +8,7 @@ require 'stringio'
 require 'rspec'
 require 'kitchen'
 
-describe Kitchen::Driver::Openstack do
+describe Kitchen::Driver::Softlayer do
   let(:logged_output) { StringIO.new }
   let(:logger) { Logger.new(logged_output) }
   let(:config) { Hash.new }
