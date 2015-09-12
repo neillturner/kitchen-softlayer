@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['neillwturner@gmail.com']
   spec.description   = 'A Test Kitchen Softlayer driver'
   spec.summary       = 'Test Kitchen Softlayer driver'
-  spec.homepage      = 'https://github.com/test-kitchen/kitchen-softlayer'
+  spec.homepage      = 'https://github.com/neillturner/kitchen-softlayer'
   spec.license       = 'Apache'
   candidates = Dir.glob('{lib}/**/*') + ['README.md', 'LICENSE.txt']
   candidates += ['CHANGELOG.md', 'kitchen-softlayer.gemspec']
