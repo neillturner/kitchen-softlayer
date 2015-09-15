@@ -62,12 +62,15 @@ module Kitchen
       default_config :global_identifier, nil
       default_config :hourly_billing_flag, true
       default_config :tags, nil
-      default_config :private_network_only, true
+      default_config :private_network_only, false
+      default_config :use_private_ip_with_public_network, false
       default_config :user_data, nil
       default_config :uid, nil
       default_config :tags, []
       default_config :vlan, nil
       default_config :private_vlan, nil
+      # provision scripts don't work yet -)
+      default_config :provision_scripts, nil
 
       def create(state)
         config[:server_name] = default_name unless config[:server_name]
@@ -183,7 +186,8 @@ module Kitchen
           :user_data,
           :uid,
           :vlan,
-          :private_vlan
+          :private_vlan,
+          :provision_scripts
         ].each do |c|
           server_def[c] = optional_config(c) if config[c]
         end
@@ -206,6 +210,8 @@ module Kitchen
         case c
         when :user_data
           File.open(config[c]).read if File.exist?(config[c])
+        when :provision_scripts
+          config[c] if config[c].is_a?(Array)
         else
           config[c]
         end
@@ -242,7 +248,9 @@ module Kitchen
         pub[config[:public_ip_order].to_i] ||
           priv[config[:private_ip_order].to_i] ||
           fail(ActionFailed, 'Could not find an IP')
-        if config[:private_network_only]
+        if config[:use_private_ip_with_public_network] and !config[:private_network_only]
+          return priv[0]
+        elsif config[:private_network_only]
           return priv[0]
         else
           return pub[0]

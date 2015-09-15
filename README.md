@@ -121,7 +121,8 @@ single_tenant | false | don't share server
 global_identifier | nil | softlayer global id
 hourly_billing_flag | true
 tags | [] | tags for the server
-private_network_only | true | if only a private network
+private_network_only | false | if only a private network
+use_private_ip_with_public_network | false | otherwise uses public ip
 user_data | nil | user data for server
 uid | nil | softlayer global id
 vlan | nil | numeric id of private_vlan for server
