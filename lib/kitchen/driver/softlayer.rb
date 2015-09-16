@@ -69,8 +69,7 @@ module Kitchen
       default_config :tags, []
       default_config :vlan, nil
       default_config :private_vlan, nil
-      # provision scripts don't work yet -)
-      default_config :provision_scripts, nil
+      default_config :provision_script, nil
 
       def create(state)
         config[:server_name] = default_name unless config[:server_name]
@@ -187,7 +186,7 @@ module Kitchen
           :uid,
           :vlan,
           :private_vlan,
-          :provision_scripts
+          :provision_script
         ].each do |c|
           server_def[c] = optional_config(c) if config[c]
         end
@@ -210,8 +209,6 @@ module Kitchen
         case c
         when :user_data
           File.open(config[c]).read if File.exist?(config[c])
-        when :provision_scripts
-          config[c] if config[c].is_a?(Array)
         else
           config[c]
         end
