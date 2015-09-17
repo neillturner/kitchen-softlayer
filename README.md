@@ -129,7 +129,7 @@ vlan | nil | numeric id of private_vlan for server
 private_vlan | nil | numeric id of private_vlan for server
 provision_script | nil | url of provision script to run
 
-NOTE: provision_script parameters needs pull request [#73](https://github.com/fog/fog-softlayer/pull/73)
+NOTE: provision_script parameter needs pull request [#73](https://github.com/fog/fog-softlayer/pull/73)
 
 ## Contributing
 
