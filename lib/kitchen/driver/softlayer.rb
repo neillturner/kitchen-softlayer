@@ -245,7 +245,7 @@ module Kitchen
         pub[config[:public_ip_order].to_i] ||
           priv[config[:private_ip_order].to_i] ||
           fail(ActionFailed, 'Could not find an IP')
-        if config[:use_private_ip_with_public_network] and !config[:private_network_only]
+        if config[:use_private_ip_with_public_network] && !config[:private_network_only]
           return priv[0]
         elsif config[:private_network_only]
           return priv[0]
