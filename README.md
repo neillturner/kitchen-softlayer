@@ -115,6 +115,7 @@ image_id | nil | image id for server
 ephemeral_storage | nil | storage
 network_components | nil | network
 ssh_timeout | 300 | timeout to ssh when server starting
+destroy_timeout | 300 | timeout to wait until server deleted
 account_id | nil | softlayer account id
 datacenter | ENV['softlayer_default_datacenter'] | datacenter code
 single_tenant | false | don't share server

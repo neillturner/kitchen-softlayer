@@ -56,6 +56,7 @@ module Kitchen
       default_config :softlayer_default_datacenter, ENV['softlayer_default_datacenter']
       default_config :softlayer_default_domain, ENV['softlayer_default_domain']
       default_config :ssh_timeout, 300
+      default_config :destroy_timeout, 300
       default_config :account_id, nil
       default_config :datacenter, ENV['softlayer_default_datacenter']
       default_config :single_tenant, false
@@ -96,13 +97,24 @@ module Kitchen
 
         config[:disable_ssl_validation] && disable_ssl_validation
         server = compute.servers.get(state[:server_id])
-        server.destroy unless server.nil?
+        server.destroy unless server.nil? || server.id.nil?
+        wait_for_server_to_delete(state)
         info "Softlayer instance <#{state[:server_id]}> destroyed."
         state.delete(:server_id)
         state.delete(:hostname)
       end
 
       private
+
+      def wait_for_server_to_delete(state)
+        ((config[:destroy_timeout].to_i/15).floor).times do
+          info 'Deleting server in softlayer'
+          sleep 15
+          server = compute.servers.get(state[:server_id])
+          return if server.nil? || server.id.nil?
+        end
+        fail "#{config[:destroy_timeout]} seconds went by and server not deleted by softlayer"
+      end
 
       def wait_for_ssh_key_access(state)
         new_state = build_ssh_args(state)
