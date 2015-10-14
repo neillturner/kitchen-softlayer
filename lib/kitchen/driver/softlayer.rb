@@ -107,7 +107,7 @@ module Kitchen
       private
 
       def wait_for_server_to_delete(state)
-        ((config[:destroy_timeout].to_i/15).floor).times do
+        ((config[:destroy_timeout].to_i / 15).floor).times do
           info 'Deleting server in softlayer'
           sleep 15
           server = compute.servers.get(state[:server_id])
