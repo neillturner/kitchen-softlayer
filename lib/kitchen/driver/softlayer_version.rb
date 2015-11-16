@@ -15,6 +15,6 @@
 module Kitchen
   # Version string for Softlayer Kitchen driver
   module Driver
-    SOFTLAYER_VERSION = '0.0.3'
+    SOFTLAYER_VERSION = '0.0.4'
   end
 end
