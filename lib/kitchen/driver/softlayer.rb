@@ -167,17 +167,16 @@ module Kitchen
         s
       end
 
-      def find_network(vlan,private=false)
-        debug "Looking for network for vlan number #{vlan}" if !private
+      def find_network(vlan, private = false)
+        debug "Looking for network for vlan number #{vlan}" unless private
         debug "Looking for private network for vlan number #{vlan}" if private
-        response = network.list_networks()
+        response = network.list_networks
         response.body.each do |r|
-          if r["vlanNumber"] == vlan
-            fail "Network id #{r['id']} for private vlan number #{r['vlanNumber']} is a public network" if private and r["networkSpace"] == "PRIVATE"
-            debug "Found network id #{r['id']} for vlan number #{r['vlanNumber']}"
-            return r['id']
-          end
-        end
+          next unless r['vlanNumber'] == vlan
+          fail "Network id #{r['id']} for private vlan number #{r['vlanNumber']} is a public network" if private && r['networkSpace'] == 'PRIVATE'
+          debug "Found network id #{r['id']} for vlan number #{r['vlanNumber']}"
+          return r['id']
+         end
         fail "No network found for vlan number #{r['vlanNumber']}"
       end
 
@@ -239,7 +238,7 @@ module Kitchen
         when :vlan
           find_network(config[c])
         when :private_vlan
-          find_network(config[c],true)
+          find_network(config[c], true)
         else
           config[c]
         end
