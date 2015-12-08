@@ -176,7 +176,7 @@ module Kitchen
           fail "Network id #{r['id']} for private vlan number #{r['vlanNumber']} is a public network" if private && r['networkSpace'] == 'PRIVATE'
           debug "Found network id #{r['id']} for vlan number #{r['vlanNumber']}"
           return r['id']
-         end
+        end
         fail "No network found for vlan number #{r['vlanNumber']}"
       end
 
