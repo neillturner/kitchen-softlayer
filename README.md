@@ -127,7 +127,7 @@ private_network_only | false | if only a private network
 use_private_ip_with_public_network | false | otherwise uses public ip
 user_data | nil | user data for server
 uid | nil | softlayer global id
-vlan | nil | numeric id of private_vlan for server
+vlan | nil | numeric id of vlan for server
 private_vlan | nil | numeric id of private_vlan for server
 provision_script | nil | url of provision script to run
 
