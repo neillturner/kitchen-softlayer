@@ -111,7 +111,7 @@ disk | nil | disk size
 flavor_id | nil | type of server i.e. m1.tiny
 bare_metal | false | server to be created on bare metal (takes longer)
 os_code | nil | softlayer's operating System Reference Code
-image_id | nil | image id for server
+image_id | nil | image name or internal id
 ephemeral_storage | nil | storage
 network_components | nil | network
 ssh_timeout | 300 | timeout to ssh when server starting

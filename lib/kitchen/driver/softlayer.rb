@@ -167,13 +167,31 @@ module Kitchen
         s
       end
 
+      def find_image(image_name)
+        id = nil
+        images = compute.images.all
+        images.each do |image|
+          if image.name == image_name
+            id = image.id
+            debug "Found public image #{id} for name #{image_name}"
+           end
+        end
+        images = compute.images.private
+        images.each do |image|
+          if image.name == image_name
+            id = image.id
+            debug "Found private image #{id} for name #{image_name}"
+           end
+        end
+        fail "No image found with name #{image_name}" if id.nil?
+        id
+      end
+
       def find_network(vlan, private = false)
-        debug "Looking for network for vlan number #{vlan}" unless private
-        debug "Looking for private network for vlan number #{vlan}" if private
+        debug "Looking for network for vlan number #{vlan}"
         response = network.list_networks
         response.body.each do |r|
           next unless r['vlanNumber'] == vlan
-          fail "Network id #{r['id']} for private vlan number #{r['vlanNumber']} is a public network" if private && r['networkSpace'] == 'PRIVATE'
           debug "Found network id #{r['id']} for vlan number #{r['vlanNumber']}"
           return r['id']
         end
@@ -239,6 +257,9 @@ module Kitchen
           find_network(config[c])
         when :private_vlan
           find_network(config[c], true)
+        when :image_id
+          return config[c] if config[c].match('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+          find_image(config[c])
         else
           config[c]
         end
