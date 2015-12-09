@@ -174,7 +174,7 @@ module Kitchen
           if image.name == image_name
             id = image.id
             debug "Found public image #{id} for name #{image_name}"
-           end
+          end
         end
         images = compute.images.private
         images.each do |image|
@@ -187,7 +187,7 @@ module Kitchen
         id
       end
 
-      def find_network(vlan, private = false)
+      def find_network(vlan)
         debug "Looking for network for vlan number #{vlan}"
         response = network.list_networks
         response.body.each do |r|
@@ -256,7 +256,7 @@ module Kitchen
         when :vlan
           find_network(config[c])
         when :private_vlan
-          find_network(config[c], true)
+          find_network(config[c])
         when :image_id
           return config[c] if config[c].match('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
           find_image(config[c])
