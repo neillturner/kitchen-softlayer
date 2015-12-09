@@ -181,7 +181,7 @@ module Kitchen
           if image.name == image_name
             id = image.id
             debug "Found private image #{id} for name #{image_name}"
-           end
+          end
         end
         fail "No image found with name #{image_name}" if id.nil?
         id
