@@ -251,8 +251,6 @@ module Kitchen
 
       def optional_config(c)
         case c
-        when :user_data
-          File.open(config[c]).read if File.exist?(config[c])
         when :vlan
           find_network(config[c])
         when :private_vlan
