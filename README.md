@@ -98,7 +98,7 @@ softlayer_default_domain | ENV['softlayer_default_domain']
 server_name | nil | Server Name
 key_name | nil | the label of the uploaded key
 ssh_key| nil | file location of private key
-disable_ssl_validation | false | ssl validation for fg softlayer api
+disable_ssl_validation | false | ssl validation for fog softlayer api
 username | 'root' | server's administration user
 password | nil | server's administration password
 port | '22' | ssh port of servef
@@ -115,6 +115,8 @@ image_id | nil | image name or internal id
 ephemeral_storage | nil | storage
 network_components | nil | network
 ssh_timeout | 300 | timeout to ssh when server starting
+ssh_via_hostname | false | use hostname for ssh instead of IP
+alternate_ip | nil | alternate ip address for ssh access
 destroy_wait | true | wait for destroy to complete
 destroy_timeout | 300 | timeout to wait until server destroyed
 account_id | nil | softlayer account id

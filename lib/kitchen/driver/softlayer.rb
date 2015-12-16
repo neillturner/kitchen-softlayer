@@ -72,6 +72,8 @@ module Kitchen
       default_config :vlan, nil
       default_config :private_vlan, nil
       default_config :provision_script, nil
+      default_config :ssh_via_hostname, false
+      default_config :alternate_ip, nil
 
       def create(state)
         config[:server_name] = default_name unless config[:server_name]
@@ -86,7 +88,13 @@ module Kitchen
         end
         info "\n(server ready)"
         tag_server(server)
-        state[:hostname] = get_ip(server)
+        if config[:ssh_via_hostname]
+          state[:hostname] = config[:hostname]
+        elsif config[:alternate_ip]
+          state[:hostname] = config[:alternate_ip]
+        else
+          state[:hostname] = get_ip(server)
+        end
         setup_ssh(server, state)
         wait_for_ssh_key_access(state)
       rescue Fog::Errors::Error, Excon::Errors::Error => ex
