@@ -89,13 +89,13 @@ module Kitchen
         end
         info "\n(server ready)"
         tag_server(server)
-        if config[:ssh_via_hostname]
-          state[:hostname] = config[:hostname]
-        elsif config[:alternate_ip]
-          state[:hostname] = config[:alternate_ip]
-        else
-          state[:hostname] = get_ip(server)
-        end
+        state[:hostname] = if config[:ssh_via_hostname]
+                             config[:hostname]
+                           elsif config[:alternate_ip]
+                             config[:alternate_ip]
+                           else
+                             get_ip(server)
+                           end
         setup_ssh(server, state)
         wait_for_ssh_key_access(state)
       rescue Fog::Errors::Error, Excon::Errors::Error => ex
@@ -134,7 +134,7 @@ module Kitchen
           server = compute.servers.get(state[:server_id])
           return if server.nil? || server.id.nil?
         end
-        fail "#{config[:destroy_timeout]} seconds went by and server not deleted by softlayer"
+        raise "#{config[:destroy_timeout]} seconds went by and server not deleted by softlayer"
       end
 
       def wait_for_ssh_key_access(state)
@@ -154,7 +154,7 @@ module Kitchen
             return
           end
         end
-        fail "#{config[:ssh_timeout]} seconds went by and we couldn't connect, somethings broken"
+        raise "#{config[:ssh_timeout]} seconds went by and we couldn't connect, somethings broken"
       end
 
       def compute
@@ -203,7 +203,7 @@ module Kitchen
             debug "Found private image #{id} for name #{image_name}"
           end
         end
-        fail "No image found with name #{image_name}" if id.nil?
+        raise "No image found with name #{image_name}" if id.nil?
         id
       end
 
@@ -215,7 +215,7 @@ module Kitchen
           debug "Found network id #{r['id']} for vlan number #{r['vlanNumber']}"
           return r['id']
         end
-        fail "No network found for vlan number #{r['vlanNumber']}"
+        raise "No network found for vlan number #{r['vlanNumber']}"
       end
 
       def create_server
@@ -339,14 +339,10 @@ module Kitchen
         pub, priv = parse_ips(pub, priv)
         pub[config[:public_ip_order].to_i] ||
           priv[config[:private_ip_order].to_i] ||
-          fail(ActionFailed, 'Could not find an IP')
-        if config[:use_private_ip_with_public_network] && !config[:private_network_only]
-          return priv[0]
-        elsif config[:private_network_only]
-          return priv[0]
-        else
-          return pub[0]
-        end
+          raise(ActionFailed, 'Could not find an IP')
+        return priv[0] if config[:use_private_ip_with_public_network] && !config[:private_network_only]
+        return priv[0] if config[:private_network_only]
+        return pub[0]
       end
 
       def parse_ips(pub, priv)
