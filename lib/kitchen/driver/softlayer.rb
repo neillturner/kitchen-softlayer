@@ -23,6 +23,7 @@ module Kitchen
     # rubocop:disable Metrics/LineLength
     class Softlayer < Kitchen::Driver::SSHBase
       default_config :server_name, nil
+      default_config :server_name_prefix, nil
       default_config :key_name, nil
       required_config :key_name
       default_config :ssh_key do
@@ -76,7 +77,7 @@ module Kitchen
       default_config :alternate_ip, nil
 
       def create(state)
-        config[:server_name] = default_name unless config[:server_name]
+        config_server_name
         config[:disable_ssl_validation] && disable_ssl_validation
         server = find_server(config[:hostname])
         server = create_server unless server
@@ -114,6 +115,17 @@ module Kitchen
       end
 
       private
+
+      # Set the proper server name in the config
+      def config_server_name
+        return if config[:server_name]
+
+        config[:server_name] = if config[:server_name_prefix]
+                                 server_name_prefix(config[:server_name_prefix])
+                               else
+                                 default_name
+                               end
+      end
 
       def wait_for_server_to_delete(state)
         ((config[:destroy_timeout].to_i / 15).floor).times do
@@ -286,6 +298,32 @@ module Kitchen
           Socket.gethostname.gsub(/\W/, '')[0..22],
           Array.new(7) { rand(36).to_s(36) }.join
         ].join('-')
+      end
+
+      def server_name_prefix(server_name_prefix)
+        # Generate what should be a unique server name with given prefix
+        # of up to 63 total chars
+        #
+        # Provided prefix:  variable, max 54
+        # Separator:        1
+        # Random string:    8
+        # ===================
+        # Max:              63
+        #
+        if server_name_prefix.length > 54
+          warn 'Server name prefix too long, truncated to 54 characters'
+          server_name_prefix = server_name_prefix[0..53]
+        end
+
+        server_name_prefix.gsub!(/\W/, '')
+
+        if server_name_prefix.empty?
+          warn 'Server name prefix empty or invalid; using fully generated name'
+          default_name
+        else
+          random_suffix = ('a'..'z').to_a.sample(8).join
+          server_name_prefix + '-' + random_suffix
+        end
       end
 
       # TODO: code has support for multiple ips but not used.

@@ -96,6 +96,7 @@ softlayer_api_key | ENV['softlayer_api_key']
 softlayer_default_datacenter | ENV['softlayer_default_datacenter']
 softlayer_default_domain | ENV['softlayer_default_domain']
 server_name | nil | Server Name
+server_name_prefix | nil | If you want to have a static prefix for a random server name.
 key_name | nil | the label of the uploaded key
 ssh_key| nil | file location of private key
 disable_ssl_validation | false | ssl validation for fog softlayer api
