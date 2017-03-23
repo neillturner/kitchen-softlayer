@@ -17,13 +17,8 @@ Gem::Specification.new do |spec|
   candidates += ['CHANGELOG.md', 'kitchen-softlayer.gemspec']
   spec.files = candidates.sort
   spec.require_paths = ['lib']
-  spec.required_ruby_version = '>= 2.0.0'
+  spec.required_ruby_version = '>= 2.1.0'
   spec.add_dependency 'test-kitchen', '~> 1.4'
   spec.add_dependency 'fog', '~> 1.18'
   spec.add_dependency 'fog-softlayer', '~> 1'
-  if RUBY_VERSION >= '2.0'
-    spec.add_dependency 'net-ssh', '>= 3'
-  else
-    spec.add_dependency 'net-ssh', '~> 2.9'
-  end
 end
