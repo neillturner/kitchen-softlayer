@@ -342,7 +342,7 @@ module Kitchen
           raise(ActionFailed, 'Could not find an IP')
         return priv[0] if config[:use_private_ip_with_public_network] && !config[:private_network_only]
         return priv[0] if config[:private_network_only]
-        return pub[0]
+        pub[0]
       end
 
       def parse_ips(pub, priv)

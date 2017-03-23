@@ -10,6 +10,10 @@ BlockLength:
   Enabled: false
 ConditionalAssignment:
   Enabled: false
+RedundantParentheses:
+  Enabled: false
+RedundantMatch:
+  Enabled: false
 PerceivedComplexity:
   Max: 10
 AbcSize:
