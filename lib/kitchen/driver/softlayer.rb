@@ -38,7 +38,6 @@ module Kitchen
       default_config :username, 'root'
       default_config :password, nil
       default_config :port, '22'
-      default_config :hostname, nil
       default_config :domain, ENV['softlayer_default_domain']
       default_config :fqdn, nil
       default_config :cpu, nil
@@ -75,12 +74,22 @@ module Kitchen
       default_config :provision_script, nil
       default_config :ssh_via_hostname, false
       default_config :alternate_ip, nil
+      default_config :connect_timeout, 120
+      default_config :read_timeout, 120
+      default_config :write_timeout, 120
 
       def create(state)
         config_server_name
         config[:disable_ssl_validation] && disable_ssl_validation
-        server = find_server(config[:hostname])
-        server = create_server unless server
+        state[:server_name] = if config[:ssh_via_hostname]
+                                config[:server_name]
+                              elsif config[:alternate_ip]
+                                config[:alternate_ip]
+                              else
+                                get_ip(server)
+                              end
+        state[:fqdn] = "#{state[:server_name]}.#{state[:domain]}"
+        server = create_server unless find_server(state[:fqdn])
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
@@ -89,13 +98,6 @@ module Kitchen
         end
         info "\n(server ready)"
         tag_server(server)
-        state[:hostname] = if config[:ssh_via_hostname]
-                             config[:hostname]
-                           elsif config[:alternate_ip]
-                             config[:alternate_ip]
-                           else
-                             get_ip(server)
-                           end
         setup_ssh(server, state)
         wait_for_ssh_key_access(state)
       rescue Fog::Errors::Error, Excon::Errors::Error => ex
@@ -111,7 +113,7 @@ module Kitchen
         wait_for_server_to_delete(state) if config[:destroy_wait]
         info "Softlayer instance <#{state[:server_id]}> destroyed."
         state.delete(:server_id)
-        state.delete(:hostname)
+        state.delete(:server_name)
       end
 
       private
@@ -175,13 +177,12 @@ module Kitchen
         )
       end
 
-      def find_server(hostname)
+      def find_server(fqdn)
         s = nil
-        servers = compute.servers.all
-        servers.each do |server|
-          if server.name == hostname
-            s = server
-            info "Server with hostname #{hostname} already created"
+        srvs = compute.servers.all.select { |x| x.fqdn == fqdn }
+        if srvs
+            s = srvs[0]
+            info "Server with fqdn #{fqdn} already created"
           end
         end
         s
@@ -262,7 +263,6 @@ module Kitchen
         {
           name: config[:server_name],
           key_pairs: [compute.key_pairs.by_label(config[:key_name])],
-          hostname: config[:hostname],
           datacenter: config[:datacenter],
           hourly_billing_flag: config[:hourly_billing_flag],
           private_network_only: config[:private_network_only]
@@ -371,8 +371,8 @@ module Kitchen
         if config[:no_ssh_tcp_check]
           sleep(config[:no_ssh_tcp_check_sleep])
         else
-          debug("wait_for_sshd hostname: #{state[:hostname]},username: #{config[:username]},port: #{config[:port]}")
-          wait_for_sshd(state[:hostname],
+          debug("wait_for_sshd hostname: #{state[:server_name]},username: #{config[:username]},port: #{config[:port]}")
+          wait_for_sshd(state[:server_name],
                         config[:username],
                         port: config[:port])
         end
