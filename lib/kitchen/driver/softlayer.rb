@@ -81,15 +81,8 @@ module Kitchen
       def create(state)
         config_server_name
         config[:disable_ssl_validation] && disable_ssl_validation
-        state[:server_name] = if config[:ssh_via_hostname]
-                                config[:server_name]
-                              elsif config[:alternate_ip]
-                                config[:alternate_ip]
-                              else
-                                get_ip(server)
-                              end
-        state[:fqdn] = "#{state[:server_name]}.#{state[:domain]}"
-        server = create_server unless find_server(state[:fqdn])
+        config[:fqdn] = "#{config[:server_name]}.#{config[:domain]}"
+        server = create_server unless find_server(config[:fqdn])
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
@@ -98,6 +91,14 @@ module Kitchen
         end
         info "\n(server ready)"
         tag_server(server)
+        # set state[:hostname] to be able to setup ssh using Fog::SSH
+        state[:hostname] = if config[:ssh_via_hostname]
+                             config[:server_name]
+                           elsif config[:alternate_ip]
+                             config[:alternate_ip]
+                           else
+                             get_ip(server)
+                           end
         setup_ssh(server, state)
         wait_for_ssh_key_access(state)
       rescue Fog::Errors::Error, Excon::Errors::Error => ex
@@ -180,10 +181,10 @@ module Kitchen
       def find_server(fqdn)
         s = nil
         srvs = compute.servers.all.select { |x| x.fqdn == fqdn }
-        if srvs
-            s = srvs[0]
-            info "Server with fqdn #{fqdn} already created"
-          end
+        debug srvs
+        unless srvs.empty?
+          s = srvs[0]
+          info "Server with fqdn #{fqdn} already created"
         end
         s
       end
@@ -371,8 +372,8 @@ module Kitchen
         if config[:no_ssh_tcp_check]
           sleep(config[:no_ssh_tcp_check_sleep])
         else
-          debug("wait_for_sshd hostname: #{state[:server_name]},username: #{config[:username]},port: #{config[:port]}")
-          wait_for_sshd(state[:server_name],
+          debug("wait_for_sshd hostname: #{state[:hostname]},username: #{config[:username]},port: #{config[:port]}")
+          wait_for_sshd(state[:hostname],
                         config[:username],
                         port: config[:port])
         end
