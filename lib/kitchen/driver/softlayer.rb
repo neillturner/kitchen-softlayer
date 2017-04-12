@@ -181,7 +181,6 @@ module Kitchen
       def find_server(fqdn)
         s = nil
         srvs = compute.servers.all.select { |x| x.fqdn == fqdn }
-        debug srvs
         unless srvs.empty?
           s = srvs[0]
           info "Server with fqdn #{fqdn} already created"
