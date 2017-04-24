@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +28,7 @@ module Kitchen
       default_config :key_name, nil
       required_config :key_name
       default_config :ssh_key do
-        %w(id_rsa id_dsa).map do |k|
+        %w[id_rsa id_dsa].map do |k|
           f = File.expand_path("~/.ssh/#{k}")
           f if File.exist?(f)
         end.compact.first
@@ -78,10 +79,14 @@ module Kitchen
       default_config :read_timeout, 120
       default_config :write_timeout, 120
 
+      # rubocop:disable Metrics/AbcSize
       def create(state)
         config_server_name
         config[:disable_ssl_validation] && disable_ssl_validation
         config[:fqdn] = "#{config[:server_name]}.#{config[:domain]}"
+        debug "fqdn: #{config[:fqdn]}"
+        debug "server_name: #{config[:server_name]}"
+        debug "server_name_prefix: #{config[:server_name_prefix]}"
         server = create_server unless find_server(config[:fqdn])
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
@@ -228,30 +233,30 @@ module Kitchen
         #        { 'net_id' => find_network(net).id }
         #      end
         #    end
-        [
-          :username,
-          :password,
-          :port,
-          :domain,
-          :fqdn,
-          :cpu,
-          :ram,
-          :disk,
-          :flavor_id,
-          :bare_metal,
-          :os_code,
-          :image_id,
-          :ephemeral_storage,
-          :network_components,
-          :account_id,
-          :single_tenant,
-          :global_identifier,
-          :tags,
-          :user_data,
-          :uid,
-          :vlan,
-          :private_vlan,
-          :provision_script
+        %i[
+          username
+          password
+          port
+          domain
+          fqdn
+          cpu
+          ram
+          disk
+          flavor_id
+          bare_metal
+          os_code
+          image_id
+          ephemeral_storage
+          network_components
+          account_id
+          single_tenant
+          global_identifier
+          tags
+          user_data
+          uid
+          vlan
+          private_vlan
+          provision_script
         ].each do |c|
           server_def[c] = optional_config(c) if config[c]
         end
