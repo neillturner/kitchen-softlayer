@@ -45,11 +45,10 @@ An example of the driver options in your `.kitchen.yml` file:
         ssh_key: C:/mykeys/my_private_sshkey.pem
         username: root
         server_name: 'myserver-test'
-        hostname: 'MyProject-test01'
+        domain: softlayer.com        
         flavor_id: m1.tiny
      #  image_id: '3b235124-a190-40b5-9720-c020e61b99e1'
         os_code: 'CENTOS_7_64'
-        domain: softlayer.com
         private_network_only: true
         cpu: 1,
         ram: 1024,
@@ -77,9 +76,9 @@ For test-kitchen to access the server via ssh it needs to be on the softlayer pr
 The `image_ref` and `flavor_ref` options can be specified as an exact id,
 an exact name, or as a regular expression matching the name of the image or flavor.
 
-### hostname
+### server_name
 
-the driver checks for a server with the hostname and will use that server instead of creating another one.
+the driver checks for a server with the server_name and will use that server instead of creating another one.
 
 ### disable_ssl_validation
 
@@ -103,7 +102,6 @@ disable_ssl_validation | false | ssl validation for fog softlayer api
 username | 'root' | server's administration user
 password | nil | server's administration password
 port | '22' | ssh port of servef
-hostname| nil | hostname of server
 domain | ENV['softlayer_default_domain'] | domain nane of server
 fqdn | nil | fully qualified domain name
 cpu | nil | no of cpus
@@ -116,7 +114,7 @@ image_id | nil | image name or internal id
 ephemeral_storage | nil | storage
 network_components | nil | network
 ssh_timeout | 300 | timeout to ssh when server starting
-ssh_via_hostname | false | use hostname for ssh instead of IP
+ssh_via_hostname | false | use server_name for ssh instead of IP
 alternate_ip | nil | alternate ip address for ssh access
 destroy_wait | true | wait for destroy to complete
 destroy_timeout | 300 | timeout to wait until server destroyed
