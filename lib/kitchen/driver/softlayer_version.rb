@@ -16,6 +16,6 @@
 module Kitchen
   # Version string for Softlayer Kitchen driver
   module Driver
-    SOFTLAYER_VERSION = '0.1.0'.freeze
+    SOFTLAYER_VERSION = '1.0.0'.freeze
   end
 end
