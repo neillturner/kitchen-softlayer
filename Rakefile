@@ -3,7 +3,7 @@
 require 'rubocop/rake_task'
 require 'rspec/core/rake_task'
 
-task default: [:rubocop, :spec]
+task default: %i[rubocop spec]
 
 RuboCop::RakeTask.new
 

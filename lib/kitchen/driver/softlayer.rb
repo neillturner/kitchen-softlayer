@@ -1,4 +1,5 @@
 # Encoding: utf-8
+
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +28,7 @@ module Kitchen
       default_config :key_name, nil
       required_config :key_name
       default_config :ssh_key do
-        %w(id_rsa id_dsa).map do |k|
+        %w[id_rsa id_dsa].map do |k|
           f = File.expand_path("~/.ssh/#{k}")
           f if File.exist?(f)
         end.compact.first
@@ -38,7 +39,6 @@ module Kitchen
       default_config :username, 'root'
       default_config :password, nil
       default_config :port, '22'
-      default_config :hostname, nil
       default_config :domain, ENV['softlayer_default_domain']
       default_config :fqdn, nil
       default_config :cpu, nil
@@ -75,12 +75,19 @@ module Kitchen
       default_config :provision_script, nil
       default_config :ssh_via_hostname, false
       default_config :alternate_ip, nil
+      default_config :connect_timeout, 120
+      default_config :read_timeout, 120
+      default_config :write_timeout, 120
 
+      # rubocop:disable Metrics/AbcSize
       def create(state)
         config_server_name
         config[:disable_ssl_validation] && disable_ssl_validation
-        server = find_server(config[:hostname])
-        server = create_server unless server
+        config[:fqdn] = "#{config[:server_name]}.#{config[:domain]}"
+        debug "fqdn: #{config[:fqdn]}"
+        debug "server_name: #{config[:server_name]}"
+        debug "server_name_prefix: #{config[:server_name_prefix]}"
+        server = create_server unless find_server(config[:fqdn])
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
@@ -89,8 +96,9 @@ module Kitchen
         end
         info "\n(server ready)"
         tag_server(server)
+        # set state[:hostname] to be able to setup ssh using Fog::SSH
         state[:hostname] = if config[:ssh_via_hostname]
-                             config[:hostname]
+                             config[:server_name]
                            elsif config[:alternate_ip]
                              config[:alternate_ip]
                            else
@@ -111,7 +119,7 @@ module Kitchen
         wait_for_server_to_delete(state) if config[:destroy_wait]
         info "Softlayer instance <#{state[:server_id]}> destroyed."
         state.delete(:server_id)
-        state.delete(:hostname)
+        state.delete(:server_name)
       end
 
       private
@@ -175,14 +183,12 @@ module Kitchen
         )
       end
 
-      def find_server(hostname)
+      def find_server(fqdn)
         s = nil
-        servers = compute.servers.all
-        servers.each do |server|
-          if server.name == hostname
-            s = server
-            info "Server with hostname #{hostname} already created"
-          end
+        srvs = compute.servers.all.select { |x| x.fqdn == fqdn }
+        unless srvs.empty?
+          s = srvs[0]
+          info "Server with fqdn #{fqdn} already created"
         end
         s
       end
@@ -227,30 +233,30 @@ module Kitchen
         #        { 'net_id' => find_network(net).id }
         #      end
         #    end
-        [
-          :username,
-          :password,
-          :port,
-          :domain,
-          :fqdn,
-          :cpu,
-          :ram,
-          :disk,
-          :flavor_id,
-          :bare_metal,
-          :os_code,
-          :image_id,
-          :ephemeral_storage,
-          :network_components,
-          :account_id,
-          :single_tenant,
-          :global_identifier,
-          :tags,
-          :user_data,
-          :uid,
-          :vlan,
-          :private_vlan,
-          :provision_script
+        %i[
+          username
+          password
+          port
+          domain
+          fqdn
+          cpu
+          ram
+          disk
+          flavor_id
+          bare_metal
+          os_code
+          image_id
+          ephemeral_storage
+          network_components
+          account_id
+          single_tenant
+          global_identifier
+          tags
+          user_data
+          uid
+          vlan
+          private_vlan
+          provision_script
         ].each do |c|
           server_def[c] = optional_config(c) if config[c]
         end
@@ -262,7 +268,6 @@ module Kitchen
         {
           name: config[:server_name],
           key_pairs: [compute.key_pairs.by_label(config[:key_name])],
-          hostname: config[:hostname],
           datacenter: config[:datacenter],
           hourly_billing_flag: config[:hourly_billing_flag],
           private_network_only: config[:private_network_only]
