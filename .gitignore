@@ -18,3 +18,5 @@ tmp
 .kitchen
 *.sw?
 *~
+.idea
+.ruby-version
