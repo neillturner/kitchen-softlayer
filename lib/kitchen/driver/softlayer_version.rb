@@ -1,4 +1,4 @@
-# Encoding: UTF-8
+# frozen_string_literal: true
 
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,6 @@
 module Kitchen
   # Version string for Softlayer Kitchen driver
   module Driver
-    SOFTLAYER_VERSION = '1.0.0'.freeze
+    SOFTLAYER_VERSION = '1.0.0'
   end
 end

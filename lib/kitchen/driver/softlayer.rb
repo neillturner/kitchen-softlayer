@@ -1,4 +1,4 @@
-# Encoding: utf-8
+# frozen_string_literal: true
 
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +87,7 @@ module Kitchen
         debug "fqdn: #{config[:fqdn]}"
         debug "server_name: #{config[:server_name]}"
         debug "server_name_prefix: #{config[:server_name_prefix]}"
-        server = create_server if config[:fqdn].include?(config[:default_name])  || !find_server(config[:fqdn])
+        server = create_server if config[:fqdn].include?(config[:default_name]) || !find_server(config[:fqdn])
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
@@ -282,7 +282,7 @@ module Kitchen
         when :private_vlan
           find_network(config[c])
         when :image_id
-          return config[c] if config[c].match('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+          return config[c] if config[c].match?('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
           find_image(config[c])
         else
           config[c]
