@@ -1,6 +1,5 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,6 +15,6 @@
 module Kitchen
   # Version string for Softlayer Kitchen driver
   module Driver
-    SOFTLAYER_VERSION = '1.0.0'
+    SOFTLAYER_VERSION = '1.0.0'.freeze
   end
 end

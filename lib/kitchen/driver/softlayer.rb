@@ -1,6 +1,5 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -155,7 +154,7 @@ module Kitchen
           ssh = Fog::SSH.new(*new_state)
           begin
             ssh.run([%(uname -a)])
-          rescue => e
+          rescue StandardError => e
             info "Server not yet accepting SSH key: #{e.message}"
             sleep 1
           else
