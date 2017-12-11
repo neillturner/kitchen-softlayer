@@ -1,4 +1,4 @@
-# Encoding: UTF-8
+# frozen_string_literal: false
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.files = candidates.sort
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.1.0'
-  spec.add_dependency 'test-kitchen', '~> 1.4'
   spec.add_dependency 'fog', '~> 1.18'
   spec.add_dependency 'fog-softlayer', '~> 1'
+  spec.add_dependency 'test-kitchen', '~> 1.4'
 end
