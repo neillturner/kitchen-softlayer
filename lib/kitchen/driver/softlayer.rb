@@ -429,8 +429,8 @@ module Kitchen
       #      end
       #      nil
       #    end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/LineLength  
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/LineLength  
     end
   end
 end
