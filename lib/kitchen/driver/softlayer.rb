@@ -82,11 +82,16 @@ module Kitchen
       def create(state)
         config_server_name
         config[:disable_ssl_validation] && disable_ssl_validation
-        config[:fqdn] = "#{config[:server_name]}.#{config[:domain]}"
+        config[:fqdn] = if config[:server_name_prefix].nil?
+                          "#{config[:server_name]}.#{config[:domain]}"
+                        else
+                          "#{config[:server_name_prefix]}-#{config[:server_name]}.#{config[:domain]}"
+                        end
         debug "fqdn: #{config[:fqdn]}"
         debug "server_name: #{config[:server_name]}"
         debug "server_name_prefix: #{config[:server_name_prefix]}"
-        server = create_server if config[:fqdn].include?(config[:default_name]) || !find_server(config[:fqdn])
+        default_name = config[:default_name] || config[:server_name]
+        server = create_server if config[:fqdn].include?(default_name) || !find_server(config[:fqdn])
         state[:server_id] = server.id
         info "Softlayer instance <#{state[:server_id]}> created."
         server.wait_for do
