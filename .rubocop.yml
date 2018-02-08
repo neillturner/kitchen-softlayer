@@ -1,7 +1,7 @@
 CyclomaticComplexity:
-  Max: 8
+  Max: 10
 MethodLength:
-  Max: 30
+  Max: 40
 ClassLength:
   Max: 500
 ClassVars:
@@ -15,6 +15,6 @@ RedundantParentheses:
 RedundantMatch:
   Enabled: false
 PerceivedComplexity:
-  Max: 10
+  Max: 15
 AbcSize:
   Max: 41
